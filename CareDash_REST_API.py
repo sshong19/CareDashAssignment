@@ -110,7 +110,11 @@ def delete_review(doctor_id,review_id):
 
 @app.route('/doctors/<int:doctor_id>', methods=['DELETE'])
 def delete_doctor(doctor_id):
+	reviews = Review.query.filter_by(doctor_id=doctor_id).all()
 	doctor = Doctor.query.filter_by(id = doctor_id).first()
+	for review in reviews:
+		db.session.delete(review)
+		db.session.commit()
 	db.session.delete(doctor)
 	db.session.commit()
 	return jsonify({'message':'Doctor deleted'})
